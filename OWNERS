@@ -1,0 +1,11 @@
+# See the OWNERS docs at https://go.k8s.io/owners
+
+approvers:
+  - durandom
+  - goern
+reviewers:
+  - codificat
+  - harshad16
+  - humair
+  - schwesig
+  - tumido
