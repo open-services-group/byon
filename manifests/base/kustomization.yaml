@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-operators
+
+resources:
+  - https://raw.githubusercontent.com/operate-first/apps/master/cluster-scope/base/operators.coreos.com/subscriptions/opendatahub-operator/subscription.yaml
+  - https://raw.githubusercontent.com/operate-first/apps/master/cluster-scope/base/operators.coreos.com/subscriptions/openshift-pipelines-operator-rh/subscription.yaml
+
+patchesStrategicMerge:
+  - pipelines-subscription.yaml
