@@ -7,3 +7,6 @@ approvers:
 reviewers:
   - codificat
   - tumido
+
+labels:
+  - wg/byon-build-pipelines
