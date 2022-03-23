@@ -30,15 +30,50 @@ run: # Creates and follows execution of 1 positive and 1 negative cases of valid
 		--showlog \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/tcoufal/false \
-		-p name="This will FAIL" \
+		-p name="Image does not exist" \
 		-p desc="This image is expected to FAIL validation"
 
 	tkn pipeline start byon-import-jupyterhub-image \
 		--showlog \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
-		-p url=quay.io/thoth-station/s2i-minimal-notebook:v0.0.15 \
-		-p name="This will PASS" \
+		-p url=quay.io/thoth-station/s2i-minimal-py38-notebook:v0.2.2 \
+		-p name="Thoth Station miminal Python 3.8" \
 		-p desc="This image is expected to PASS validation"
+
+
+test: # Queues various import pipelines and asserts results
+	@echo -n "Queuing import pipelines..."
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/tcoufal/false \
+		-p name="Image does not exist" \
+		-p desc="This image is expected to FAIL validation" >/dev/null
+
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/thoth-station/s2i-minimal-py38-notebook:v0.2.2 \
+		-p name="Thoth Station miminal Python 3.8" \
+		-p desc="This image is expected to PASS validation" >/dev/null
+
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/thoth-station/s2i-minimal-notebook:v0.0.15 \
+		-p name="Thoth Station miminal Python 3.6" \
+		-p desc="This image is expected to FAIL validation" >/dev/null
+
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/tcoufal/jh-minimal-test \
+		-p name="Debian based miminal Python 3.8" \
+		-p desc="This image is expected to PASS validation" >/dev/null
+	@echo " Done"
+
+	@echo -n "Waiting for pipelines to finish execution..."
+	@while tkn pipelinerun list | grep "Running" >/dev/null; do sleep 20; echo -n "."; done
+	@echo " Done"
+
+	@echo "Results:"
+	@oc get $$(oc get is -o name | grep byon) -o custom-columns=NAME:.metadata.annotations.opendatahub\\.io\\/notebook-image-name,DESCRIPTION:.metadata.annotations.opendatahub\\.io\\/notebook-image-desc,PHASE:.metadata.annotations.opendatahub\\.io\\/notebook-image-phase,VISIBILITY:.metadata.annotations.opendatahub\\.io\\/notebook-image-visible,MESSAGES:.metadata.annotations.opendatahub\\.io\\/notebook-image-message
 
 cleanup: # Cleanup from previous runs (removes all imagestreams created from `make run` and deletes all pipelinerun resources)
 	oc delete $(shell oc get is -o name | grep byon)
