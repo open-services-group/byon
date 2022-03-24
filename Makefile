@@ -73,10 +73,10 @@ test: # Queues various import pipelines and asserts results
 	@echo " Done"
 
 	@echo "Results:"
-	@oc get $$(oc get is -o name | grep byon) -o custom-columns=NAME:.metadata.annotations.opendatahub\\.io\\/notebook-image-name,DESCRIPTION:.metadata.annotations.opendatahub\\.io\\/notebook-image-desc,PHASE:.metadata.annotations.opendatahub\\.io\\/notebook-image-phase,VISIBILITY:.metadata.annotations.opendatahub\\.io\\/notebook-image-visible,MESSAGES:.metadata.annotations.opendatahub\\.io\\/notebook-image-message
+	@oc get is -l app.kubernetes.io/created-by=byon -o custom-columns=NAME:.metadata.annotations.opendatahub\\.io\\/notebook-image-name,DESCRIPTION:.metadata.annotations.opendatahub\\.io\\/notebook-image-desc,PHASE:.metadata.annotations.opendatahub\\.io\\/notebook-image-phase,VISIBILITY:.metadata.annotations.opendatahub\\.io\\/notebook-image-visible,MESSAGES:.metadata.annotations.opendatahub\\.io\\/notebook-image-message
 
 cleanup: # Cleanup from previous runs (removes all imagestreams created from `make run` and deletes all pipelinerun resources)
-	oc delete $(shell oc get is -o name | grep byon)
+	oc delete is -l app.kubernetes.io/created-by=byon
 	oc delete prs --all
 
 help: # Show help message
