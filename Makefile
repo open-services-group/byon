@@ -66,6 +66,19 @@ test: # Queues various import pipelines and asserts results
 		-p url=quay.io/tcoufal/jh-minimal-test \
 		-p name="Debian based miminal Python 3.8" \
 		-p desc="This image is expected to PASS validation" >/dev/null
+
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/guimou/s2i-minimal-data-science-optapy-notebook:latest \
+		-p name="Minimal DataScience notebook with OptaPy" \
+		-p desc="This image is expected to PASS validation" >/dev/null
+
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/guimou/odh-minimal-datascience-r-notebook:latest \
+		-p name="Minimal DataScience notebook with R and RStudio" \
+		-p desc="This image is expected to PASS validation" >/dev/null
+
 	@echo " Done"
 
 	@echo -n "Waiting for pipelines to finish execution..."
