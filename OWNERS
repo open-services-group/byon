@@ -3,10 +3,11 @@
 approvers:
   - durandom
   - goern
-  - pacospace
+  - tumido
+  - oindrillac
 reviewers:
   - codificat
-  - tumido
+
 
 labels:
   - wg/byon-build-pipelines
