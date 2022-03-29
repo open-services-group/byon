@@ -79,6 +79,12 @@ test: # Queues various import pipelines and asserts results
 		-p name="Minimal DataScience notebook with R and RStudio" \
 		-p desc="This image is expected to PASS validation" >/dev/null
 
+	@tkn pipeline start byon-import-jupyterhub-image \
+		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
+		-p url=quay.io/os-climate/aicoe-osc-demo:latest \
+		-p name="OS-Climate image with Pytorch" \
+		-p desc="This image is expected to PASS validation" >/dev/null
+
 	@echo " Done"
 
 	@echo -n "Waiting for pipelines to finish execution..."
