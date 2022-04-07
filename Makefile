@@ -31,6 +31,7 @@ run: # Creates and follows execution of 1 positive and 1 negative cases of valid
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/tcoufal/false \
 		-p name="Image does not exist" \
+		-p creator="some_user" \
 		-p desc="This image is expected to FAIL validation"
 
 	tkn pipeline start byon-import-jupyterhub-image \
@@ -38,6 +39,7 @@ run: # Creates and follows execution of 1 positive and 1 negative cases of valid
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/thoth-station/s2i-minimal-py38-notebook:v0.2.2 \
 		-p name="Thoth Station miminal Python 3.8" \
+		-p creator="some_user" \
 		-p desc="This image is expected to PASS validation"
 
 
@@ -47,42 +49,49 @@ test: # Queues various import pipelines and asserts results
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/tcoufal/false \
 		-p name="Image does not exist" \
+		-p creator="some_user" \
 		-p desc="This image is expected to FAIL validation" >/dev/null
 
 	@tkn pipeline start byon-import-jupyterhub-image \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/thoth-station/s2i-minimal-py38-notebook:v0.2.2 \
 		-p name="Thoth Station miminal Python 3.8" \
+		-p creator="some_user" \
 		-p desc="This image is expected to PASS validation" >/dev/null
 
 	@tkn pipeline start byon-import-jupyterhub-image \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/thoth-station/s2i-minimal-notebook:v0.0.15 \
 		-p name="Thoth Station miminal Python 3.6" \
+		-p creator="some_user" \
 		-p desc="This image is expected to FAIL validation" >/dev/null
 
 	@tkn pipeline start byon-import-jupyterhub-image \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/tcoufal/jh-minimal-test \
 		-p name="Debian based miminal Python 3.8" \
+		-p creator="some_user" \
 		-p desc="This image is expected to PASS validation" >/dev/null
 
 	@tkn pipeline start byon-import-jupyterhub-image \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/guimou/s2i-minimal-data-science-optapy-notebook:latest \
 		-p name="Minimal DataScience notebook with OptaPy" \
+		-p creator="some_user" \
 		-p desc="This image is expected to PASS validation" >/dev/null
 
 	@tkn pipeline start byon-import-jupyterhub-image \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/guimou/odh-minimal-datascience-r-notebook:latest \
 		-p name="Minimal DataScience notebook with R and RStudio" \
+		-p creator="some_user" \
 		-p desc="This image is expected to PASS validation" >/dev/null
 
 	@tkn pipeline start byon-import-jupyterhub-image \
 		-w name=data,volumeClaimTemplateFile=manifests/overlays/dev/pvc.yaml \
 		-p url=quay.io/os-climate/aicoe-osc-demo:latest \
 		-p name="OS-Climate image with Pytorch" \
+		-p creator="some_user" \
 		-p desc="This image is expected to PASS validation" >/dev/null
 
 	@echo " Done"
